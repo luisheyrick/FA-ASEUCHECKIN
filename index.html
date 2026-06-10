@@ -694,6 +694,27 @@
       return;
     }
 
+    const nomeLower = nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const bloqueados = ['hartmann'];
+    const bloqueado = bloqueados.some(b => nomeLower.includes(b));
+    if (bloqueado) {
+      const inp = document.getElementById('input-nome');
+      inp.style.borderColor = '#e24b4a';
+      let msg = document.getElementById('erro-bloqueado');
+      if (!msg) {
+        msg = document.createElement('p');
+        msg.id = 'erro-bloqueado';
+        msg.style.cssText = 'color:#c0392b;font-size:13px;font-weight:700;margin-top:-10px;margin-bottom:14px;text-align:center;background:#fdecea;border-radius:8px;padding:10px 12px;';
+        inp.parentNode.insertBefore(msg, inp.nextSibling);
+      }
+      msg.textContent = '🚫 Esse nome não está na lista de convidados!';
+      setTimeout(() => {
+        inp.style.borderColor = '#d9d9d9';
+        if (msg) msg.textContent = '';
+      }, 3500);
+      return;
+    }
+
     const horario = horarioSel ? horarioSel.value : 'No início do jogo (19h)';
     const nomeUpper = nome.toUpperCase();
 
